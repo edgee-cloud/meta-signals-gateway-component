@@ -78,25 +78,6 @@ settings.edgee_track_event_enabled = true  # Enable/disable custom event trackin
 settings.edgee_user_event_enabled = true   # Enable/disable user identification
 ```
 
-### Consent Management
-Before sending events to Meta Signals Gateway, you can set the user consent using the Edgee SDK: 
-```javascript
-edgee.consent("granted");
-```
-
-Or using the Data Layer:
-```html
-<script id="__EDGEE_DATA_LAYER__" type="application/json">
-  {
-    "data_collection": {
-      "consent": "granted"
-    }
-  }
-</script>
-```
-
-If the consent is not set, the component will use the default consent status.
-
 ## Development
 
 ### Building from Source
