@@ -28,60 +28,50 @@ This component implements the data collection protocol between [Edgee](https://w
 [[components.data_collection]]
 id = "meta_signals_gateway"
 file = "/var/edgee/components/meta_signals_gateway.wasm"
-settings.meta_access_token = "YOUR_ACCESS_TOKEN"
-settings.meta_pixel_id = "YOUR_PIXEL_ID"
-settings.meta_test_event_code = "TEST_EVENT_CODE" # Optional
+settings.servers_location = "EU"           # Choose servers location (EU or US)
+settings.pixel_id = "YOUR_PIXEL_ID"        # Meta Pixel ID
+settings.data_collection_method = "edge"   # Data collection method (edge or js)
+settings.path_prefix = ""                  # Custom path prefix for Meta Pixel (not used by the component)
+settings.inject_sdk = false                # Automatically inject Meta Pixel (not used by the component)
 ```
 
 ## Event Handling
 
 ### Event Mapping
-The component maps Edgee events to Meta CAPI events as follows:
+The component maps Edgee events to Meta Signals Gateway events as follows:
 
-| Edgee event | Meta CAPI Event  | Description |
+| Edgee event | Meta Signals Gateway Event  | Description |
 |-------------|-----------|-------------|
 | Page   | `PageView`     | Triggered when a user views a page |
 | Track  | Name of the event | Uses the provided event name directly |
 | User   | `Lead` | Used for lead identification |
 
 ### User Event Handling
-User events in Meta CAPI serve multiple purposes:
-- Triggers an `Lead` call to Meta CAPI
+User events in Meta Signals Gateway serve multiple purposes:
+- Triggers an `Lead` call to Meta Signals Gateway
 - Stores `user_id`, `anonymous_id`, and `properties` on the user's device
 - Enriches subsequent Page and Track events with user data
 - Enables proper user attribution across sessions
-
-**BE CAREFUL:**
-Meta Conversions API is designed to create a connection between an advertiser’s marketing data (such as website events) and Meta systems that optimize ad targeting, decrease cost per result and measure outcomes.
-Each event you send to Meta CAPI must have a user property (at least one of the following: `email`, `phone_number`), otherwise the event will be ignored.
-
-Here is an example of a user call:
-```javascript
-edgee.user({
-  user_id: "123",
-  properties: {
-    email: "john.doe@example.com",
-  },
-});
-```
 
 ## Configuration Options
 
 ### Basic Configuration
 ```toml
 [[components.data_collection]]
-id = "meta_capi"
-file = "/var/edgee/components/meta_capi.wasm"
-settings.meta_access_token = "YOUR_ACCESS_TOKEN"
-settings.meta_pixel_id = "YOUR_PIXEL_ID"
-settings.meta_test_event_code = "TEST_EVENT_CODE" # Optional
+id = "meta_signals_gateway"
+file = "/var/edgee/components/meta_signals_gateway.wasm"
+settings.servers_location = "EU"           # Choose servers location (EU or US)
+settings.pixel_id = "YOUR_PIXEL_ID"        # Meta Pixel ID
+settings.data_collection_method = "edge"   # Data collection method (edge or js)
+settings.path_prefix = ""                  # Custom path prefix for Meta Pixel (not used by the component)
+settings.inject_sdk = false                # Automatically inject Meta Pixel (not used by the component)
 
 # Optional configurations
 settings.edgee_default_consent = "pending" # Set default consent status
 ```
 
 ### Event Controls
-Control which events are forwarded to Meta CAPI:
+Control which events are forwarded to Meta Signals Gateway:
 ```toml
 settings.edgee_page_event_enabled = true   # Enable/disable page view tracking
 settings.edgee_track_event_enabled = true  # Enable/disable custom event tracking
@@ -89,7 +79,7 @@ settings.edgee_user_event_enabled = true   # Enable/disable user identification
 ```
 
 ### Consent Management
-Before sending events to Meta CAPI, you can set the user consent using the Edgee SDK: 
+Before sending events to Meta Signals Gateway, you can set the user consent using the Edgee SDK: 
 ```javascript
 edgee.consent("granted");
 ```
@@ -106,13 +96,6 @@ Or using the Data Layer:
 ```
 
 If the consent is not set, the component will use the default consent status.
-**Important:** Meta CAPI requires the consent status to be set to `granted`. If not, the events will be ignored.
-
-| Consent | Events |
-|---------|--------|
-| pending | ignored |
-| denied  | ignored |
-| granted | forwarded |
 
 ## Development
 
@@ -124,8 +107,7 @@ Prerequisites:
 
 Build command:
 ```bash
-make wit-deps
-make build
+edgee component build
 ```
 
 ### Contributing
