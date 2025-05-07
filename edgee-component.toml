@@ -1,0 +1,59 @@
+manifest-version = 1
+
+[component]
+name = "Meta Signals Gateway"
+version = "1.0.0"
+category = "data-collection"
+subcategory = "server-side"
+description = """
+Meta Signals Gateway is an enterprise-grade solution that securely connects your internal data with Meta's advertising ecosystem. It enables marketing teams to:
+
+- Maximize data value while maintaining complete control and confidentiality
+- Streamline data flow between any source and destination
+- Improve campaign performance and ROI
+- Reduce operational overhead and resource requirements
+
+Edgee provides a fully managed Signals Gateway instance, seamlessly integrated with your Edgee project, making it effortless to leverage Meta's advanced advertising capabilities.
+"""
+documentation = "https://www.edgee.cloud/docs/components/data-collection/meta-signals-gateway"
+repository = "https://github.com/edgee-cloud/meta-signals-gateway-component"
+wit-version = "1.0.0"
+icon-path = "meta.png"
+language = "Rust"
+
+[component.build]
+command = "cargo build --target wasm32-wasip2 --release && cp ./target/wasm32-wasip2/release/meta_signals_gateway_component.wasm meta_signals_gateway.wasm"
+output_path = "meta_signals_gateway.wasm"
+
+[component.settings.servers_location]
+title = "Servers location"
+type = "string"
+options = ["EU", "US"]
+required = true
+description = "Choose your servers location based on the location of most of your clients. Location can not be changed later."
+
+[component.settings.pixel_id]
+title = "Pixel ID"
+type = "string"
+required = true
+description = "Once your Signal Gateway account and pipeline have been created, please insert here your Pixel ID."
+
+[component.settings.data_collection_method]
+title = "Data Collection Method"
+type = "string"
+options = ["edge", "js"]
+required = true
+description = "Select how you want to collect data for this component. With 'Edge' mode, Edgee handles data collection and event forwarding to Signals Gateway automatically. With 'JS' mode, you'll need to integrate the Meta Pixel SDK directly on your website to collect and send events."
+
+[component.settings.path_prefix]
+title = "Path Prefix"
+type = "string"
+required = true
+description = "When using JS data collection, specify a custom path prefix for the Meta Pixel. This helps prevent ad blockers from detecting and blocking the pixel. You can change this value at any time to maintain effectiveness."
+
+
+[component.settings.inject_sdk]
+title = "Automatic Meta Pixel Injection"
+type = "bool"
+required = true
+description = "When enabled, the Meta Pixel will be automatically added to your website. If disabled, you'll need to add the Meta Pixel code to your website manually. This setting only applies when using the 'JS' data collection method."
