@@ -113,10 +113,7 @@ fn build_edgee_request(meta_payload: MetaPayload) -> EdgeeRequest {
         "US" => "sgw-us.edgee.app",
         _ => "sgw-eu.edgee.app",
     };
-    let url = format!(
-        "https://{}/capi/{}/events",
-        domain, meta_payload.pixel_id
-    );
+    let url = format!("https://{}/capi/{}/events", domain, meta_payload.pixel_id);
 
     EdgeeRequest {
         method: HttpMethod::Post,
@@ -343,7 +340,9 @@ mod tests {
         assert_eq!(edgee_request.method, HttpMethod::Post);
         assert!(!edgee_request.body.is_empty());
         assert_eq!(
-            edgee_request.url.starts_with("https://sgw-eu.edgee.app/capi/"),
+            edgee_request
+                .url
+                .starts_with("https://sgw-eu.edgee.app/capi/"),
             true
         );
         // add more checks (headers, querystring, etc.)
@@ -464,7 +463,6 @@ mod tests {
         let result = MetaComponent::user(event, settings);
         assert_eq!(result.clone().is_err(), false);
     }
-
 
     #[test]
     fn user_event_without_ids_fails() {
